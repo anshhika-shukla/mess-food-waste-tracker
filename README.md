@@ -5,6 +5,10 @@
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-CDN-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Chart.js](https://img.shields.io/badge/Chart.js-4.x-FF6384?style=flat&logo=chartdotjs&logoColor=white)](https://www.chartjs.org)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Render Deployment](https://img.shields.io/badge/Render-Live_Demo-46E3B7?style=flat&logo=render&logoColor=white)](https://mess-food-waste-tracker.onrender.com)
+
+> 🚀 **Live Demo:** [https://mess-food-waste-tracker.onrender.com](https://mess-food-waste-tracker.onrender.com)  
+> 📖 **API Docs:** [https://mess-food-waste-tracker.onrender.com/docs](https://mess-food-waste-tracker.onrender.com/docs)
 
 A production-ready college mini-project bridging student dining satisfaction with kitchen operational efficiency. The system pairs **NFC/RFID meal card swipe verification** with **authenticated student feedback** and **daily kitchen & plate waste logging** to give mess managers actionable, data-backed insights to reduce food wastage.
 
