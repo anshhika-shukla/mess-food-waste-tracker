@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dining Portal{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Top Hero Section / Student Identity Selector -->
+    <div class="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold mb-3 border border-emerald-400/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Live Mess Verification Active
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Student Meal Check-in & Verified Feedback</h1>
+                <p class="text-emerald-100 text-sm mt-1 max-w-xl">
+                    Swipe your digital mess ID to record attendance, then submit verified food ratings to help mess managers improve quality and reduce kitchen waste.
+                </p>
+            </div>
+
+            <!-- Student Profile Switcher -->
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 min-w-[280px]">
+                <label for="student-select" class="block text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-1.5">
+                    Select Dining Student
+                </label>
+                <select id="student-select" class="w-full bg-slate-900/80 text-white text-sm rounded-lg border border-emerald-500/40 p-2.5 focus:ring-2 focus:ring-emerald-400 focus:outline-none">
+                    {% for s in students %}
+                    <option value="{{ s.student_id }}" data-name="{{ s.full_name }}" data-hostel="{{ s.hostel_block }}" data-room="{{ s.room_no }}">
+                        {{ s.student_id }} - {{ s.full_name }} ({{ s.hostel_block }})
+                    </option>
+                    {% endfor %}
+                </select>
+                <div id="student-badge" class="mt-2.5 flex items-center justify-between text-xs text-emerald-200">
+                    <span id="student-room">Room: --</span>
+                    <span class="px-2 py-0.5 rounded bg-emerald-500/30 text-emerald-100 border border-emerald-400/30">Active Student</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Date & Status Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+        <div>
+            <h2 class="text-xl font-bold text-slate-900">Today's Meal Schedule</h2>
+            <p class="text-sm text-slate-500">{{ today_str }}</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs">
+            <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                Step 1: Swipe Card
+            </span>
+            <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                Step 2: Verified Rating
+            </span>
+        </div>
+    </div>
+
+    <!-- Today's Meal Cards Grid (Breakfast, Lunch, Snacks, Dinner) -->
+    <div id="meals-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Rendered dynamically via student.js -->
+        <div class="col-span-full py-12 text-center text-slate-400">
+            <svg class="w-8 h-8 animate-spin mx-auto text-emerald-500 mb-2" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            Loading today's meal schedule...
+        </div>
+    </div>
+
+</div>
+
+<!-- Verified Feedback Modal -->
+<div id="feedback-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 transform transition-all">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-start pb-4 border-b border-slate-100">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 mb-1">
+                    <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                    Swipe Verified & Authenticated
+                </div>
+                <h3 class="text-lg font-bold text-slate-900" id="modal-meal-title">Meal Feedback</h3>
+                <p class="text-xs text-slate-500" id="modal-menu-dishes">Dishes list</p>
+            </div>
+            <button id="close-modal-btn" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Feedback Form -->
+        <form id="feedback-form" class="mt-5 space-y-5">
+            <input type="hidden" id="modal-attendance-id" value="">
+
+            <!-- 5-Star Rating Selector -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                    Food Quality Rating <span class="text-rose-500">*</span>
+                </label>
+                <div class="flex items-center gap-2" id="star-rating-group">
+                    {% for star in range(1, 6) %}
+                    <button type="button" data-rating="{{ star }}" class="star-btn text-3xl text-slate-300 hover:text-amber-400 focus:outline-none transition-colors">
+                        ★
+                    </button>
+                    {% endfor %}
+                    <span id="rating-label" class="text-xs font-semibold text-slate-500 ml-2">Click a star (1-5)</span>
+                </div>
+                <input type="hidden" id="selected-rating" required>
+            </div>
+
+            <!-- Feedback Category Pills -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                    Category Tag <span class="text-xs font-normal text-slate-500">(Optional)</span>
+                </label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="category-pills">
+                    {% for cat in categories %}
+                    <button type="button" data-cat-id="{{ cat.category_id }}" class="cat-pill text-xs font-medium py-2 px-3 rounded-lg border border-slate-200 text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 transition-colors text-center">
+                        {{ cat.category_name }}
+                    </button>
+                    {% endfor %}
+                </div>
+                <input type="hidden" id="selected-category-id">
+            </div>
+
+            <!-- Comments Textarea -->
+            <div>
+                <label for="feedback-comments" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                    Comments or Suggestions <span class="text-xs font-normal text-slate-500">(Optional)</span>
+                </label>
+                <textarea id="feedback-comments" rows="3" class="w-full text-sm rounded-lg border border-slate-300 p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none resize-none" placeholder="E.g., Salt was balanced, chapatis were soft, paneer was fresh..."></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                <button type="button" id="cancel-modal-btn" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" id="submit-feedback-btn" class="px-5 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-md shadow-emerald-600/20 transition-all flex items-center gap-1.5">
+                    <span>Submit Verified Review</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/student.js"></script>
+{% endblock %}

@@ -1,0 +1,59 @@
+/* Custom styles for Smart Mess Food Feedback & Waste Tracker */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Star rating styling */
+.star-btn {
+    transition: transform 0.15s ease, color 0.15s ease;
+    cursor: pointer;
+    user-select: none;
+}
+.star-btn:hover {
+    transform: scale(1.2);
+}
+.star-btn.active {
+    color: #f59e0b; /* amber-500 */
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+/* Category pill active state */
+.cat-pill.active {
+    background-color: #059669; /* emerald-600 */
+    color: #ffffff;
+    border-color: #047857;
+    box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.2);
+}
+
+/* Glassmorphism accent */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Pulse animation for active swipe indicator */
+@keyframes pulse-subtle {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+.pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
