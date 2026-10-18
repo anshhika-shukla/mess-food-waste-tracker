@@ -81,15 +81,14 @@ def student_portal_page(request: Request, db: Session = Depends(get_db)):
     categories = db.query(FeedbackCategory).order_by(FeedbackCategory.category_name).all()
     today_str = date.today().strftime("%A, %B %d, %Y")
     return templates.TemplateResponse(
-        "student.html",
-        {
-            "request": request,
-            "students": students,
-            "categories": categories,
-            "today_str": today_str,
-            "active_page": "student"
-        }
-    )
+            request=request,
+            name="student.html",
+            context={
+                "students": students,
+                "categories": categories,
+                "today_str": today_str
+            }
+        )
 
 
 @app.get("/manager", response_class=HTMLResponse)
@@ -98,15 +97,14 @@ def manager_dashboard_page(request: Request, db: Session = Depends(get_db)):
     menus = db.query(MealMenu).order_by(desc(MealMenu.meal_date), MealMenu.meal_session).limit(28).all()
     today_str = date.today().strftime("%A, %B %d, %Y")
     return templates.TemplateResponse(
-        "manager.html",
-        {
-            "request": request,
-            "menus": menus,
-            "today_str": today_str,
-            "active_page": "manager"
-        }
-    )
-
+            request=request,
+            name="manager.html",
+            context={
+                "menus": menus,
+                "today_str": today_str,
+                "active_page": "manager"
+            }
+        )
 
 @app.get("/menu", response_class=HTMLResponse)
 def menu_schedule_page(request: Request, db: Session = Depends(get_db)):
@@ -125,14 +123,13 @@ def menu_schedule_page(request: Request, db: Session = Depends(get_db)):
         grouped[d_str]["sessions"][m.meal_session] = m
 
     return templates.TemplateResponse(
-        "menu_schedule.html",
-        {
-            "request": request,
+        request=request,
+        name="menu_schedule.html",
+        context={
             "grouped_menus": grouped,
             "active_page": "menu"
         }
     )
-
 
 # =========================================================================
 # REST API Endpoints
