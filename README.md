@@ -192,13 +192,8 @@ Double-click `run.bat` in the root folder. It will:
    uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
    ```
 
-6. **Open in Browser**:
-   - **Student Portal**: [http://localhost:8000/student](http://localhost:8000/student)
-   - **Mess Manager Dashboard**: [http://localhost:8000/manager](http://localhost:8000/manager)
-   - **Weekly Timetable**: [http://localhost:8000/menu](http://localhost:8000/menu)
-   - **Interactive API Swagger Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
----
+
 
 ## 📡 API Reference Overview
 
@@ -248,18 +243,7 @@ git branch -M main
 git push -u origin main
 ```
 
----
 
-## 🎓 College Viva & Evaluation Notes
-
-1. **Why enforce Foreign Key Pragmas on SQLite?**
-   By default, SQLite disables foreign key validation for backward compatibility. In `app/database.py`, we hook into SQLAlchemy's engine connect event to run `PRAGMA foreign_keys=ON;`, guaranteeing strict referential integrity and cascading deletes.
-2. **How does the system prevent review fraud?**
-   Feedback cannot be submitted without an `attendance_id`. Furthermore, the `attendance_id` column in `student_feedback` is marked `UNIQUE`, mathematically preventing ballot-stuffing or duplicate reviews.
-3. **What is the real-world impact of the analytics?**
-   Mess contractors traditionally cook fixed quantities regardless of student sentiment. By correlating low star ratings with high plate discard %, managers can pinpoint unpalatable recipes (e.g. undercooked soya or oversalted dal), adjust batch sizes, and save substantial monthly food budgets.
-
----
 
 ## 📄 License
 This project is licensed under the MIT License.
